@@ -4,11 +4,18 @@ import pywhatkit
 import datetime
 import wikipedia
 import smtplib
+import time
 listener=sr.Recognizer()
 engine=pyttsx3.init()
 engine.say("jarvis activated")
 engine.say("waiting for your command")
 engine.runAndWait()
+
+def v8aftertalk(text):
+    engine.say(text)
+    engine.runAndWait()
+
+
 def talk(text):
     engine.say(text)
     engine.runAndWait()
@@ -25,6 +32,9 @@ def take_Command():
     except:
         pass
     return command
+
+
+
 def use_Command():    
     try:
         with sr.Microphone() as source1:
@@ -36,21 +46,55 @@ def use_Command():
     except:
         pass
     return command1
+
+def repeat():
+    talk("you have asked to repeat")
+    introduction()
+        
+
+def introduction():
+    talk("hello i am your assistant to guide this desktop ")
+    talk("you have to tell the operation you need, when i ask at the end ")
+    talk("now i am going to list out the operations which i could perform ")
+    talk("say play a song with song name to play ")
+    talk(" say email to send an email")
+    talk("ask what is the time to know the current time")
+    talk("ask who is or what is with the content name to find the result ")
+    talk("if i want to repeat what i told now means say yes ")
+    talk("or else just say no")
+    asktoRepeat=use_Command();
+    if asktoRepeat == "yes":
+        repeat()
+    else:
+        pass
+introduction()
+   
+        
 def run_jarvis():
+    talk("now say what should i do")
     command=take_Command()
+   # command1=use_Command()
     print(command)
+    
+    
     if "play" in command:
         song=command.replace("play","")
         talk("playing" + song)
         pywhatkit.playonyt(song)
+        
+        
     elif "time" in command:
-        time=datetime.datetime.now().strftime("%I %M:%p")
-        talk(time)
+        times=datetime.datetime.now().strftime("%I %M:%p")
+        talk(times)
+        
+        
     elif "who is" in command:
         person=command.replace("who is","")
         info=wikipedia.summary(person,2)
         print(info)
         talk(info)
+        
+        
     elif 'email' in command:
         talk('you have selected to send an email')
         talk('please answer the following informations to proceed')
@@ -89,12 +133,20 @@ def run_jarvis():
             talk("the mail has been sent successfully")
         else:
             talk("as you said no or you did not answer the mail was cancelled")
-        
+
             
-        
-        
-        
-        
-        
+    
 run_jarvis()
+
+#hear the program will goes to sleep for 10 seconds
+time.sleep(10)
+        
+# hear the program starts from first
+talk("what should i do now ")
+talk("if you want to do any other operations please say, yes ")
+lastReq=use_Command()
+if lastReq == "yes":
+    run_jarvis()
+else:
+    quit()
      
