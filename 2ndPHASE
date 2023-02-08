@@ -1,0 +1,123 @@
+import speech_recognition as sr
+import pyttsx3
+import pywhatkit
+import datetime
+import wikipedia
+import smtplib
+listener=sr.Recognizer()
+engine=pyttsx3.init()
+engine.say("jarvis activated")
+engine.say("waiting for your command")
+engine.runAndWait()
+def talk(text):
+    engine.say(text)
+    engine.runAndWait()
+def take_Command():    
+    try:
+        with sr.Microphone() as source:
+            print("listening...")
+            voice=listener.listen(source)
+            command=listener.recognize_google(voice)
+            command=command.lower()
+            if "hello" in command:
+                command=command.replace("hello","" )
+                
+    except:
+        pass
+    return command
+def use_Command():    
+    try:
+        with sr.Microphone() as source1:
+            print("listening...")
+            voice1=listener.listen(source1)
+            command1=listener.recognize_google(voice1)
+            command1=command1.lower()
+            
+    except:
+        pass
+    return command1
+def repeat():
+    talk("you have asked to repeat")
+    introduction()
+def introduction():
+    talk("hello i am your assistant to guide this desktop ")
+    talk("you have to tell the operation you need, when i ask at the end ")
+    talk("now i am going to list out the operations which i could perform ")
+    talk("say play a song with song name to play ")
+    talk(" say email to send an email")
+    talk("ask what is the time to know the current time")
+    talk("ask who is or what is with the content name to find the result ")
+    talk("if i want to repeat what i told now means say yes ")
+    talk("or else just say no")
+    asktoRepeat=use_Command();
+    if asktoRepeat == "yes":
+        repeat()
+    else:
+        pass
+#calling the function;
+introduction()
+
+def run_jarvis():
+    talk("waiting for your command")
+    command=take_Command()
+    print(command)
+    if "play" in command:
+        song=command.replace("play","")
+        talk("playing" + song)
+        pywhatkit.playonyt(song)
+    elif "time" in command:
+        time=datetime.datetime.now().strftime("%I %M:%p")
+        talk(time)
+    elif "who is" in command:
+        person=command.replace("who is","")
+        info=wikipedia.summary(person,2)
+        print(info)
+        talk(info)
+    elif 'email' in command:
+        talk('you have selected to send an email')
+        talk('please answer the following informations to proceed')
+        talk('tell your email id')
+        sender_email=use_Command()
+        #sender_email=("miniproject54321@gmail.com")
+        sender_email=sender_email.replace(" ","")
+        sender_email=sender_email.replace("at","@")
+        print(sender_email)
+        talk(sender_email)
+        talk("tell your password to login your account")
+        sender_password=use_Command()
+        #sender_password=("pmrpaeehognufizt")
+        sender_password=sender_password.replace(" ","")
+        sender_password=sender_password.replace("at","@")
+        print(sender_password)
+        talk(sender_password)
+        talk('please say the email id to send the mail')
+        reciever_mail=use_Command()
+        #reciever_mail=("akashravi517@gmail.com")
+        reciever_mail=reciever_mail.replace(" ","")
+        reciever_mail=reciever_mail.replace("at","@")
+        print(reciever_mail)
+        talk(reciever_mail)
+        talk('say the email content to be in the mail')
+        email_content=take_Command()
+        print(email_content)
+        talk('now i am going to repeat the content which you have told')
+        talk(email_content)
+        server=smtplib.SMTP('smtp.gmail.com',587)
+        server.starttls()
+        server.login(sender_email,sender_password)
+        talk("please say yes to send the mail and no to cancel")
+        choice=use_Command()
+        if "yes" in choice:
+            server.sendmail(sender_email,reciever_mail,email_content)
+            talk("the mail has been sent successfully")
+        else:
+            talk("as you said no or you did not answer the mail was cancelled")
+        
+            
+        
+        
+        
+        
+        
+run_jarvis()
+     
